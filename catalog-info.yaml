@@ -1,0 +1,28 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: worker-emissao-notas
+  title: Worker de Emissão de Notas
+  description: Consome mensagens da fila de pagamentos aprovados e integra com a prefeitura para gerar a NF.
+  tags: [java, spring-boot, worker]
+spec:
+  type: service
+  lifecycle: production
+  owner: group:squad-billing
+  system: billing-gateway
+  dependsOn:
+    - resource:kafka-fila-pagamentos
+    - resource:bucket-notas-fiscais
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: bucket-notas-fiscais
+  title: Storage de Notas Fiscais (S3)
+  description: Armazenamento de arquivos XML e PDF das notas fiscais emitidas.
+  tags: [storage, aws-s3]
+spec:
+  type: s3-bucket
+  owner: group:squad-billing
+  system: billing-gateway
